@@ -19,16 +19,30 @@ SELECT
   "tpep_dropoff_datetime",
   "tpep_pickup_datetime",
   "trip_distance",
-  datediff(
-    minute,
-    to_timestamp_ntz("tpep_pickup_datetime" / 1000),
-    to_timestamp_ntz("tpep_dropoff_datetime" / 1000)
+  DATEDIFF(
+    'minute',
+    TO_TIMESTAMP_NTZ("tpep_pickup_datetime" / 1000000),
+    TO_TIMESTAMP_NTZ("tpep_dropoff_datetime" / 1000000)
   ) AS "trip_duration",
+
   TO_VARCHAR(
     TO_TIMESTAMP_NTZ("tpep_pickup_datetime" / 1000000),
-    'DD-MM'
+    'MM-DD-YYYY'
   ) AS "date",
-  "trip_distance" / ("trip_duration" / 60.0) as "mean_speed",
+
+  EXTRACT(
+    HOUR FROM TO_TIMESTAMP_NTZ("tpep_pickup_datetime" / 1000000)
+  ) AS "hour",
+
+  "trip_distance" * 60.0
+  / NULLIF(
+      DATEDIFF(
+        'minute',
+        TO_TIMESTAMP_NTZ("tpep_pickup_datetime" / 1000000),
+        TO_TIMESTAMP_NTZ("tpep_dropoff_datetime" / 1000000)
+      ),
+      0
+    ) AS "mean_speed",
   CASE 
     WHEN "tip_amount" > 0 THEN "tip_amount"/"total_amount"*100.0
     ELSE 0
