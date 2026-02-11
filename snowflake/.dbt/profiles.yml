@@ -1,0 +1,16 @@
+snowflake:
+target: dev
+outputs:
+    dev:
+      type: snowflake
+      account: JBDSNCL-DE47487
+      user: STHOREZDEBRUCQ
+      password: vV3T6rXZDW3YdK9
+
+      role: SYSADMIN
+      database: MNYC_TAXI_DB
+      warehouse: NYC_TAXI_WH
+      schema: DEV
+
+      threads: 4
+      client_session_keep_alive: false
